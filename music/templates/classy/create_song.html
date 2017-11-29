@@ -1,4 +1,4 @@
-{% extends 'music/base.html' %}
+{% extends 'classy/base.html' %}
 {% block title %}Add a New Song{% endblock %}
 {% block albums_active %}active{% endblock %}
 
@@ -41,7 +41,7 @@
                     <form class="form-horizontal" role="form" action="" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         <input type="hidden" name="album" value="{{ album }}">
-                        {% include 'music/form_template.html' %}
+                        {% include 'classy/form_template.html' %}
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
                                 <button type="submit" class="btn btn-success">Submit</button>

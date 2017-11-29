@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('music', '0004_song_is_favorite'),
+        ('classy', '0004_song_is_favorite'),
     ]
 
     operations = [
