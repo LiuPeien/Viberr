@@ -44,9 +44,20 @@ class PredictionForm(forms.ModelForm):
 
     class Meta:
         model = Corpus
-        fields = ['corpus_title', 'corpus_text']
+        fields = ['corpus_text']
 
 
 class UploadFileForm(forms.Form):
     classifier_name = forms.CharField(max_length=50)
     file = forms.FileField()
+
+
+class ModelChoiceForm(forms.Form):
+    MODLE_LIST = (
+        ('NB', 'Naive Bayes'),
+        ('LR', 'Logistic Regression'),
+        ('SVM', 'Support vector machine'),
+        ('MLKNN', 'ML-KNN'),
+        ('MLRWR', 'ML-RWR'),
+    )
+    classifier_model = forms.ChoiceField(choices=MODLE_LIST, label='Choose Model')

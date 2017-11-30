@@ -41,15 +41,6 @@ def create_corpus(request, classifier_id):
     form = CorpusForm(request.POST or None)
     classifier = get_object_or_404(Classifier, pk=classifier_id)
     if form.is_valid():
-        classifier_corpus = classifier.corpus_set.all()
-        for s in classifier_corpus:
-            if s.corpus_title == form.cleaned_data.get("corpus_title"):
-                context = {
-                    'classifier': classifier,
-                    'form': form,
-                    'error_message': 'You already added that corpus',
-                }
-                return render(request, 'classy/create_corpus.html', context)
         corpus = form.save(commit=False)
         corpus.classifier = classifier
         corpus.corpus_text = form.cleaned_data['corpus_text']
@@ -155,7 +146,7 @@ def login_user(request):
             if user.is_active:
                 login(request, user)
                 classifier = Classifier.objects.filter(user=request.user)
-                return render(request, 'classy/index.html', {'classifier': classifier})
+                return render(request, 'classy/index.html', {'classifiers': classifier})
             else:
                 return render(request, 'classy/login.html', {'error_message': 'Your account has been disabled'})
         else:
@@ -204,18 +195,20 @@ def corpus(request, filter_by):
 
 
 def trainer(request, classifier_id):
-    classifier = Classifier.objects.get(pk=classifier_id)
-    corpus = classifier.corpus_set.all()
-    labels = {corpi.category for corpi in corpus}
-    context = {'classifier': classifier, 'labels': labels}
-    if request.POST:
-        print("POSTING")
-        text = request.POST.get('training_text')
-        label = request.POST.get('label')
-        classifier.add_corpus(label, text)
-        return render(request, 'classy/trainer.html', context)
-    else:
-        return render(request, 'classy/trainer.html', context)
+    form = ModelChoiceForm(request.POST or None)
+    classifier = get_object_or_404(Classifier, pk=classifier_id)
+    train_message = ""
+
+    if form.is_valid():
+        classifier_model = form.cleaned_data['classifier_model']
+        train_message = classifier.train(classifier_model)
+
+    context = {
+        'train_message': train_message,
+        'classifier': classifier,
+        'form': form,
+    }
+    return render(request, 'classy/trainer.html', context)
 
 
 def classifier(request, classifier_id):
@@ -225,7 +218,6 @@ def classifier(request, classifier_id):
 
     if form.is_valid():
         corpus_text = form.cleaned_data['corpus_text']
-        classifier.train()
         prediction = classifier.predict(corpus_text)
 
     context = {

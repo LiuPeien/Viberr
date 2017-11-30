@@ -72,9 +72,9 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for corpus in corpuss %}
+                                {% for corpus in corpuses %}
                                     <tr>
-                                        <td>{{ corpus.song_title }}</td>
+                                        <td>{{ corpus.corpus_title }}</td>
                                         <td>{{ corpus.corpus_text }}</td>
                                         <td>
                                             <a href="{% url 'classy:detail' corpus.classifier.id %}">

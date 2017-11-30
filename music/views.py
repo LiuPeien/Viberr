@@ -48,7 +48,7 @@ def create_song(request, album_id):
                     'form': form,
                     'error_message': 'You already added that song',
                 }
-                return render(request, 'music/create_corpus.html', context)
+                return render(request, 'music/create_song.html', context)
         song = form.save(commit=False)
         song.album = album
         song.audio_file = request.FILES['audio_file']
@@ -60,7 +60,7 @@ def create_song(request, album_id):
                 'form': form,
                 'error_message': 'Audio file must be WAV, MP3, or OGG',
             }
-            return render(request, 'music/create_corpus.html', context)
+            return render(request, 'music/create_song.html', context)
 
         song.save()
         return render(request, 'music/detail.html', {'album': album})
@@ -68,7 +68,7 @@ def create_song(request, album_id):
         'album': album,
         'form': form,
     }
-    return render(request, 'music/create_corpus.html', context)
+    return render(request, 'music/create_song.html', context)
 
 
 def delete_album(request, album_id):
@@ -151,7 +151,7 @@ def logout_user(request):
     context = {
         "form": form,
     }
-    return render(request, 'classy/login.html', context)
+    return render(request, 'music/login.html', context)
 
 
 def login_user(request):
