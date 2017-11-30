@@ -33,10 +33,10 @@ class Classifier(models.Model):
     user = models.ForeignKey(User, default=1)
     classifier_name = models.CharField(max_length=100)
     classifier_logo = models.FileField()
-    is_visible = models.BooleanField(default=True)
+    is_favorite = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.classifier_name + ' - ' + self.user
+        return self.classifier_name
 
     def add_corpus(self, category, text):
         corp = Corpus(classifier=self, category=category.strip().lower(),
@@ -53,12 +53,12 @@ class Classifier(models.Model):
 
         # 加载所有的文档
         corpus = self.corpus_set.all()
-        text = [corp.text for corp in corpus]
-        category = [corp.category for corp in corpus]
+        text_list = [corp.corpus_text for corp in corpus]
+        labels_list = [corp.corpus_label for corp in corpus]
 
         # 标签分割
         labels = []
-        for c in category:
+        for c in labels_list:
             labels.append(c.split())
 
         # 把多标签转换为一个矩阵
@@ -67,7 +67,7 @@ class Classifier(models.Model):
         self.classes_index = mb.classes_
 
         # 进行训练
-        self.trained_pipe = pipe.fit(text, label_matrix)
+        self.trained_pipe = pipe.fit(text_list, label_matrix)
 
     def predict(self, value):
         result = self.trained_pipe.predict([value])[0]
@@ -85,6 +85,7 @@ class Corpus(models.Model):
     corpus_title = models.CharField(max_length=100)
     corpus_text = models.TextField()
     corpus_label = models.CharField(max_length=100)
+    is_favorite = models.BooleanField(default=False)
 
     def __str__(self):
         return self.corpus_title

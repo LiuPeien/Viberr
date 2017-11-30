@@ -36,5 +36,17 @@ class ClassifierForm(forms.ModelForm):
 class CorpusForm(forms.ModelForm):
 
     class Meta:
-        model = Classifier
-        fields = ['user', 'classifier_name', 'classifier_logo']
+        model = Corpus
+        fields = ['corpus_title', 'corpus_text', 'corpus_label']
+
+
+class PredictionForm(forms.ModelForm):
+
+    class Meta:
+        model = Corpus
+        fields = ['corpus_title', 'corpus_text']
+
+
+class UploadFileForm(forms.Form):
+    classifier_name = forms.CharField(max_length=50)
+    file = forms.FileField()

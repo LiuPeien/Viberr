@@ -1,0 +1,58 @@
+{% extends 'classy/base.html' %}
+{% block title %}All Corpus{% endblock %}
+{% block songs_active %}active{% endblock %}
+
+{% block body %}
+<div class="container-fluid songs-container">
+
+    <div class="row">
+        <div class="col-sm-12">
+            <ul class="nav nav-pills" style="margin-bottom: 10px;">
+                <li role="presentation" {% if filter_by == 'all' %}class="active"{% endif %}><a href="{% url 'classy:corpus' 'all' %}">View All</a></li>
+                <li role="presentation" {% if filter_by == 'favorites' %}class="active"{% endif %}><a href="{% url 'classy:corpus' 'favorites' %}">Favorites</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-sm-12">
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Corpus Title</th>
+                                <th>Corpus Text</th>
+                                <th>Classifier</th>
+                                <th>Favorite</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for corpus in corpus_list %}
+                                <tr>
+                                    <td>{{ corpus.corpus_title }}</td>
+                                    <td>{{ corpus.corpus_text }}</td>
+                                    <td>
+                                        <a href="{% url 'classy:detail' corpus.classifier.id %}">
+                                            <img src="{{ corpus.classifier.classifier_logo.url }}" class="img-responsive" style="width: 20px; float: left; margin-right: 10px;" />
+                                        </a>
+                                        <a href="{% url 'classy:detail' corpus.classifier.id %}">{{ corpus.classifier.classifier_name }}</a>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'classy:favorite' corpus.id %}" class="btn-favorite"><span class="glyphicon glyphicon-star {% if corpus.is_favorite %}active{% endif %}"></span></a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

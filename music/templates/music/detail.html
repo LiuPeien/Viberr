@@ -1,5 +1,5 @@
-{% extends 'classy/base.html' %}
-{% block title %}{{ classifier }}{% endblock %}
+{% extends 'music/base.html' %}
+{% block title %}{{ album }}{% endblock %}
 {% block albums_active %}active{% endblock %}
 
 {% block body %}
@@ -11,14 +11,15 @@
         <div class="col-sm-4 col-md-3">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <a href="{% url 'classy:detail' classifier.id %}">
-                        {% if classifier.classifier_logo %}
-                            <img src="{{ classifier.classifier_logo.url }}" class="img-responsive">
+                    <a href="{% url 'music:detail' album.id %}">
+                        {% if album.album_logo %}
+                            <img src="{{ album.album_logo.url }}" class="img-responsive">
                         {% else %}
                             <h3>No image to display</h3>
                         {% endif %}
                     </a>
-                    <h1>{{ classifier.classifier_name }}</h1>
+                    <h1>{{ album.album_title }} <small>{{ album.genre }}</small></h1>
+                    <h2>{{ album.artist }}</h2>
                 </div>
             </div>
         </div>
@@ -27,16 +28,14 @@
         <div class="col-sm-8 col-md-9">
 
             <ul class="nav nav-pills" style="margin-bottom: 10px;">
-                <li role="presentation" class="active"><a href="{% url 'classy:detail' classifier.id %}">View All</a></li>
-                <li role="presentation"><a href="{% url 'classy:create_corpus' classifier.id %}">Add New Corpus</a></li>
-                <li role="presentation"><a href="{% url 'classy:upload_file' classifier.id %}">Upload File</a></li>
-                <li role="presentation"><a href="{% url 'classy:classifier' classifier.id %}">Make Prediction</a></li>
+                <li role="presentation" class="active"><a href="{% url 'music:detail' album.id %}">View All</a></li>
+                <li role="presentation"><a href="{% url 'music:create_song' album.id %}">Add New Song</a></li>
             </ul>
 
             <div class="panel panel-default">
                 <div class="panel-body">
 
-                    <h3>All Corpus</h3>
+                    <h3>All Songs</h3>
 
                     {% if error_message %}
                         <p><strong>{{ error_message }}</strong></p>
@@ -46,23 +45,29 @@
                         <thead>
                         <tr>
                             <th>Title</th>
-                            <th>Text</th>
+                            <th>Audio File</th>
                             <th>Favorite</th>
                             <th>Actions</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {% for corpus in classifier.corpus_set.all %}
+                        {% for song in album.song_set.all %}
                             <tr>
-                                <td>{{ corpus.corpus_title }}</td>
-                                <td>{{ corpus.corpus_text }}</td>
+                                <td>{{ song.song_title }}</td>
                                 <td>
-                                    <a href="{% url 'classy:favorite' corpus.id %}" class="btn-favorite"><span class="glyphicon glyphicon-star {% if corpus.is_favorite %}active{% endif %}"></span></a>
+                                    <a target="_blank" href="{{ song.audio_file.url }}">
+                                        <button type="button" class="btn btn-success btn-xs">
+                                            <span class="glyphicon glyphicon-play"></span>&nbsp; Play
+                                        </button>
+                                    </a>
                                 </td>
                                 <td>
-                                    <form action="{% url 'classy:delete_corpus' classifier.id corpus.id %}" method="post" style="display: inline;">
+                                    <a href="{% url 'music:favorite' song.id %}" class="btn-favorite"><span class="glyphicon glyphicon-star {% if song.is_favorite %}active{% endif %}"></span></a>
+                                </td>
+                                <td>
+                                    <form action="{% url 'music:delete_song' album.id song.id %}" method="post" style="display: inline;">
                                         {% csrf_token %}
-                                        <input type="hidden" name="corpus_id" value="{{ corpus.id }}" />
+                                        <input type="hidden" name="song_id" value="{{ song.id }}" />
                                         <button type="submit" class="btn btn-danger btn-xs">
                                             <span class="glyphicon glyphicon-remove"></span>&nbsp; Delete
                                         </button>
