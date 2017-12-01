@@ -30,8 +30,9 @@
         <!-- Items -->
         <div class="collapse navbar-collapse" id="topNavBar">
             <ul class="nav navbar-nav">
-                <li class="{% block albums_active %}{% endblock %}"><a href="{% url 'classy:index' %}"><span class="glyphicon glyphicon-book" aria-hidden="true"></span>&nbsp; Classifier</a></li>
-                <li class="{% block songs_active %}{% endblock %}"><a href="{% url 'classy:corpus' 'all' %}"><span class="glyphicon glyphicon-list" aria-hidden="true"></span>&nbsp; Corpus</a></li>
+                <li class="{% block classifier_active %}{% endblock %}"><a href="{% url 'classy:index' %}"><span class="glyphicon glyphicon-book" aria-hidden="true"></span>&nbsp; Classifier</a></li>
+                <li class="{% block corpus_active %}{% endblock %}"><a href="{% url 'classy:corpus' 'all' %}"><span class="glyphicon glyphicon-list" aria-hidden="true"></span>&nbsp; Corpus</a></li>
+                <li class="{% block stop_word_active %}{% endblock %}"><a href="{% url 'classy:stop_words' %}"><span class="glyphicon glyphicon-filter" aria-hidden="true"></span>&nbsp; Stop Words</a></li>
             </ul>
             <form class="navbar-form navbar-left" role="search" method="get" action="{% url 'classy:index' %}">
                 <div class="form-group">

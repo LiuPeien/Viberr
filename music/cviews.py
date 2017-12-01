@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
 from .forms import *
-from .models import Classifier, Corpus
+from .models import Classifier, Corpus, Stopwords
 
 AUDIO_FILE_TYPES = ['wav', 'mp3', 'ogg']
 IMAGE_FILE_TYPES = ['png', 'jpg', 'jpeg']
@@ -18,17 +18,6 @@ def create_classifier(request):
         if form.is_valid():
             classifier = form.save(commit=False)
             classifier.user = request.user
-            classifiers = Classifier.objects.all()
-
-            # 判断是否重名字
-            for c in classifiers:
-                if c.classifier_name == form.cleaned_data['classifier_name']:
-                    context = {
-                        'classifier': classifier,
-                        'form': form,
-                        'error_message': 'WARNING: You already added that classifier with the same name!',
-                    }
-                    return render(request, 'classy/create_classifier.html', context)
             classifier.classifier_name = form.cleaned_data['classifier_name']
 
             # 判断文件格式是否正确
@@ -75,11 +64,19 @@ def delete_classifier(request, classifier_id):
     return render(request, 'classy/index.html', {'classifier': classifier})
 
 
-def delete_corpus(request, classifier_id, corpus_id):
+def delete_corpus(request, classifier_id, corpus_id, filter_by):
     classifier = get_object_or_404(Classifier, pk=classifier_id)
     corpus = Corpus.objects.get(pk=corpus_id)
     corpus.delete()
-    return render(request, 'classy/detail.html', {'classifier': classifier})
+
+    if filter_by == 'detail':
+        return render(request, 'classy/detail.html', {'classifier': classifier})
+    else:
+        context = {
+            'classifier': classifier,
+            'filter_by': filter_by,
+        }
+        return render(request, 'classy/corpus.html', context)
 
 
 def detail(request, classifier_id):
@@ -206,6 +203,63 @@ def corpus(request, filter_by):
             'filter_by': filter_by,
         })
 
+
+def stop_words(request):
+    if not request.user.is_authenticated():
+        return render(request, 'classy/login.html')
+    else:
+        stop_words_list = Stopwords.objects.all()
+        return render(request, 'classy/stopwords.html', {
+            'stop_words_list': stop_words_list,
+        })
+
+
+def add_stop_words(request):
+    form = StopwordsForm(request.POST or None)
+    if form.is_valid():
+        stopwords = form.save(commit=False)
+        stopwords.word = form.cleaned_data['word']
+        stopwords.save()
+        stop_words_list = Stopwords.objects.all()
+        return render(request, 'classy/stopwords.html', {'stop_words_list': stop_words_list})
+    context = {
+        'form': form,
+    }
+    return render(request, 'classy/add_stopwords.html', context)
+
+
+def delete_stop_words(request, stopwords_id):
+    stopwords = get_object_or_404(Stopwords, pk=stopwords_id)
+    stopwords.delete()
+
+    stop_words_list = Stopwords.objects.all()
+    return render(request, 'classy/stopwords.html', {'stop_words_list': stop_words_list})
+
+
+def upload_stop_words(request):
+    form = UploadStopWordsFileForm(request.POST or None, request.FILES or None)
+
+    if form.is_valid():
+        print('file received!')
+        file = request.FILES['file']
+
+        for chunk in file.chunks():
+            csv_data = chunk.decode()
+            csv_rows = csv_data.split('\n')
+            for i in range(1, len(csv_rows)):
+                row_values = csv_rows[i].split(',')
+                stopwords = Stopwords(word=row_values[0],
+                                      )
+                stopwords.save()
+
+        stop_words_list = Stopwords.objects.all()
+        return render(request, 'classy/stopwords.html', {'stop_words_list': stop_words_list})
+
+    context = {
+        'form': form,
+    }
+
+    return render(request, 'classy/upload_stopwords.html', context)
 
 def trainer(request, classifier_id):
     form = ModelChoiceForm(request.POST or None)

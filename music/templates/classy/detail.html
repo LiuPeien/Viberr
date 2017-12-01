@@ -1,6 +1,6 @@
 {% extends 'classy/base.html' %}
 {% block title %}{{ classifier }}{% endblock %}
-{% block albums_active %}active{% endblock %}
+{% block classifier_active %}active{% endblock %}
 
 {% block body %}
 <div class="container-fluid songs-container">
@@ -48,6 +48,7 @@
                         <tr>
                             <th>Title</th>
                             <th>Text</th>
+                            <th>Labels</th>
                             <th>Favorite</th>
                             <th>Actions</th>
                         </tr>
@@ -57,11 +58,12 @@
                             <tr>
                                 <td>{{ corpus.corpus_title }}</td>
                                 <td>{{ corpus.corpus_text }}</td>
+                                <td>{{ corpus.corpus_label }}</td>
                                 <td>
                                     <a href="{% url 'classy:favorite' corpus.id %}" class="btn-favorite"><span class="glyphicon glyphicon-star {% if corpus.is_favorite %}active{% endif %}"></span></a>
                                 </td>
                                 <td>
-                                    <form action="{% url 'classy:delete_corpus' classifier.id corpus.id %}" method="post" style="display: inline;">
+                                    <form action="{% url 'classy:delete_corpus' classifier.id corpus.id 'detail' %}" method="post" style="display: inline;">
                                         {% csrf_token %}
                                         <input type="hidden" name="corpus_id" value="{{ corpus.id }}" />
                                         <button type="submit" class="btn btn-danger btn-xs">

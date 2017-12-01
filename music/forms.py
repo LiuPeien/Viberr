@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 
-from .models import Album, Song, Classifier, Corpus
+from .models import *
 
 
 class AlbumForm(forms.ModelForm):
@@ -40,6 +40,13 @@ class CorpusForm(forms.ModelForm):
         fields = ['corpus_title', 'corpus_text', 'corpus_label']
 
 
+class StopwordsForm(forms.ModelForm):
+
+    class Meta:
+        model = Stopwords
+        fields = ['word']
+
+
 class PredictionForm(forms.ModelForm):
 
     class Meta:
@@ -49,6 +56,10 @@ class PredictionForm(forms.ModelForm):
 
 class UploadFileForm(forms.Form):
     classifier_name = forms.CharField(max_length=50)
+    file = forms.FileField()
+
+
+class UploadStopWordsFileForm(forms.Form):
     file = forms.FileField()
 
 

@@ -1,7 +1,10 @@
 from django.contrib.auth.models import Permission, User
 from django.db import models
 from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.svm import SVC
 from sklearn.multiclass import OneVsRestClassifier
 from sklearn.preprocessing import MultiLabelBinarizer
 from sklearn.pipeline import Pipeline
@@ -33,15 +36,15 @@ class Song(models.Model):
 
 class Classifier(models.Model):
     user = models.ForeignKey(User, default=1)
-    classifier_name = models.CharField(max_length=50)
+    classifier_name = models.CharField(max_length=50, unique=True)
     classifier_logo = models.FileField()
     classifier_labels = models.CharField(max_length=200, default='')
     is_favorite = models.BooleanField(default=False)
 
     model_dict = {
-        'NB': OneVsRestClassifier(LogisticRegression(), n_jobs=-1),
+        'NB': OneVsRestClassifier(MultinomialNB()),
         'LR': OneVsRestClassifier(LogisticRegression(), n_jobs=-1),
-        'SVM': OneVsRestClassifier(LogisticRegression(), n_jobs=-1),
+        'SVM': OneVsRestClassifier(SVC(kernel='linear')),
         'MLKNN': OneVsRestClassifier(LogisticRegression(), n_jobs=-1),
         'MLRWR': OneVsRestClassifier(LogisticRegression(), n_jobs=-1),
     }
@@ -58,9 +61,12 @@ class Classifier(models.Model):
         corp.save()
 
     def train(self, classifier_model):
+        stop_words = [sw.word for sw in Stopwords.objects.all()]
+
         pipe = Pipeline([
-            ('vect', CountVectorizer(
+            ('vect', TfidfVectorizer(
                         token_pattern=r'[a-zA-Z]+|\s+|\_+|[^\w\d\s]',
+                        stop_words=stop_words
                         )),
             ('clf', self.model_dict[classifier_model]),
             ])
@@ -118,3 +124,10 @@ class Corpus(models.Model):
 
     def __str__(self):
         return self.corpus_title
+
+
+class Stopwords(models.Model):
+    word = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.Stopwords_word

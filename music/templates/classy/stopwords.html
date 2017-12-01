@@ -1,0 +1,58 @@
+{% extends 'classy/base.html' %}
+{% block title %}All Stop Words{% endblock %}
+{% block stop_word_active %}active{% endblock %}
+
+{% block body %}
+<div class="container-fluid songs-container">
+
+    <div class="row">
+        <div class="col-sm-12">
+            <ul class="nav nav-pills" style="margin-bottom: 10px;">
+                <li role="presentation" class="active"><a href="{% url 'classy:stop_words' %}">View All</a></li>
+                <li role="presentation" ><a href="{% url 'classy:add_stop_words' %}">Add Stop Word</a></li>
+                <li role="presentation" ><a href="{% url 'classy:upload_stop_words' %}">Upload File</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-sm-12">
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Stop Word Id</th>
+                                <th>Stop Word</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for stop_words in stop_words_list %}
+                                <tr>
+                                    <td>{{ stop_words.id }}</td>
+                                    <td>{{ stop_words.word }}</td>
+                                    <td>
+                                        <form action="{% url 'classy:delete_stop_words' stop_words.id %}" method="post" style="display: inline;">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="stop_words_id" value="{{ stop_words.id }}" />
+                                            <button type="submit" class="btn btn-danger btn-xs">
+                                                <span class="glyphicon glyphicon-remove"></span>&nbsp; Delete
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}
