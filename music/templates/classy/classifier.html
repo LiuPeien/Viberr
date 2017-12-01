@@ -50,13 +50,15 @@
                             </div>
                         </div>
                     </form>
-                    <div class="col-md-4">
-                        {% if prediction %}
-                        <input class="form-control input-lg" id="disabledInput" type="text" placeholder="{{ prediction }}" disabled>
-                        {% else %}
-                        <input class="form-control input-lg" id="disabledInput" type="text" placeholder="Please, input a corpus..." disabled>
-                        {% endif %}
-                    </div>
+
+                    {% if prediction %}
+                        <h3>Predicted results</h3>
+                        <div class="col-sm-offset-2 col-sm-4">
+                            <p><strong>
+                                <h1 style="color:black">{{ prediction }}</h1>
+                            </strong></p>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
 

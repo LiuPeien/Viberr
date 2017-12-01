@@ -74,7 +74,7 @@ class Classifier(models.Model):
         self.trained_pipe = pipe.fit(text_list, self.label_matrix)
         joblib.dump(self.trained_pipe, 'music/model/classifier' + str(self.id) + '.model')
 
-        return "Model done! You can make prediction now."
+        return "Model done! You can make prediction now!"
 
     def predict(self, value):
         model_path = self.get_model_path()
@@ -85,14 +85,14 @@ class Classifier(models.Model):
             result = self.trained_pipe.predict([value])[0]
             classes_index = self.classifier_labels.split()
 
-            labels = ""
+            labels = []
             for i in range(0, len(result)):
                 if result[i] == 1:
-                    labels = labels + " " + classes_index[i]
+                    labels.append(str(classes_index[i]))
 
             return labels
         else:
-            return "Please train the classifier before making prediction!"
+            return "Please train the classifier before making prediction!!!"
 
     def transform_label(self, corpus):
         labels_list = [corp.corpus_label for corp in corpus]

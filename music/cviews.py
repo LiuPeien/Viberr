@@ -18,7 +18,20 @@ def create_classifier(request):
         if form.is_valid():
             classifier = form.save(commit=False)
             classifier.user = request.user
+            classifiers = Classifier.objects.all()
+
+            # 判断是否重名字
+            for c in classifiers:
+                if c.classifier_name == form.cleaned_data['classifier_name']:
+                    context = {
+                        'classifier': classifier,
+                        'form': form,
+                        'error_message': 'WARNING: You already added that classifier with the same name!',
+                    }
+                    return render(request, 'classy/create_classifier.html', context)
             classifier.classifier_name = form.cleaned_data['classifier_name']
+
+            # 判断文件格式是否正确
             classifier.classifier_logo = request.FILES['classifier_logo']
             file_type = classifier.classifier_logo.url.split('.')[-1]
             file_type = file_type.lower()
@@ -26,7 +39,7 @@ def create_classifier(request):
                 context = {
                     'classifier': classifier,
                     'form': form,
-                    'error_message': 'Image file must be PNG, JPG, or JPEG',
+                    'error_message': 'WARNING: Image file must be PNG, JPG, or JPEG!',
                 }
                 return render(request, 'classy/create_classifier.html', context)
             classifier.save()

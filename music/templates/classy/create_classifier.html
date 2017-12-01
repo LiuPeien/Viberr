@@ -11,9 +11,6 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <h3>Add a New Classifier</h3>
-                    {% if error_message %}
-                        <p><strong>{{ error_message }}</strong></p>
-                    {% endif %}
                     <form class="form-horizontal" role="form" action="" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         {% include 'classy/form_template.html' %}
@@ -23,6 +20,11 @@
                             </div>
                         </div>
                     </form>
+                    {% if error_message %}
+                        <p><strong>
+                            <h4 style="color:red">{{ error_message }}</h4>
+                        </strong></p>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -31,10 +33,10 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <h3>What is Classy?</h3>
-                    <p>Viberr is a multi-label text classifier app that allows you to train multi-label text classifier and make prediction for new texts.</p>
+                    <p>Classy is a multi-label text classifier app that allows you to train multi-label text classifier and make prediction for new texts.</p>
                     <h3>How do I add classifier?</h3>
                     <p>First, create a new classifier by filling out the form on this page. Once a classifier is created you will be able to add/upload texts.</p>
-                    <h3>What are some Classifier logo best practices?</h3>
+                    <h3>What are some classifier logo best practices?</h3>
                     <ul>
                         <li>Have a resolution of 512x512</li>
                         <li>Use common image formats such as .JPG, .GIF, or .PNG</li>

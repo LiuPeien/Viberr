@@ -37,9 +37,6 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <h3>Train Classifier</h3>
-                    {% if train_message %}
-                        <p><strong>{{ train_message }}</strong></p>
-                    {% endif %}
                     {% if error_message %}
                         <p><strong>{{ error_message }}</strong></p>
                     {% endif %}
@@ -53,6 +50,15 @@
                             </div>
                         </div>
                     </form>
+
+                    {% if train_message %}
+                        <h3>Trained results</h3>
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <p><strong>
+                                <h3 style="color: orangered">{{ train_message }}</h3>
+                            </strong></p>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
 

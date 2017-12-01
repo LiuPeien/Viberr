@@ -22,6 +22,11 @@
                             <!-- View Details -->
                             <a href="{% url 'classy:detail' classifier.id %}" class="btn btn-primary btn-sm" role="button">View Details</a>
 
+                            <!-- Favorite Album -->
+                            <a href="{% url 'classy:favorite_classifier' classifier.id %}" class="btn btn-default btn-sm btn-favorite" role="button">
+                                <span class="glyphicon glyphicon-star {% if classifier.is_favorite %}active{% endif %}"></span>
+                            </a>
+
                             <!-- Delete Album -->
                             <form action="{% url 'classy:delete_classifier' classifier.id %}" method="post" style="display: inline;">
                                 {% csrf_token %}
@@ -30,11 +35,6 @@
                                     <span class="glyphicon glyphicon-trash"></span>
                                 </button>
                             </form>
-
-                            <!-- Favorite Album -->
-                            <a href="{% url 'classy:favorite_classifier' classifier.id %}" class="btn btn-default btn-sm btn-favorite" role="button">
-                                <span class="glyphicon glyphicon-star {% if classifier.is_favorite %}active{% endif %}"></span>
-                            </a>
 
                         </div>
                     </div>
