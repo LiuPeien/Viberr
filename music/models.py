@@ -35,8 +35,8 @@ class Song(models.Model):
 
 
 class Classifier(models.Model):
-    user = models.ForeignKey(User, default=1)
-    classifier_name = models.CharField(max_length=50, unique=True)
+    user = models.ForeignKey(User)
+    classifier_name = models.CharField(max_length=50)
     classifier_logo = models.FileField()
     classifier_labels = models.CharField(max_length=200, default='')
     is_favorite = models.BooleanField(default=False)
@@ -61,12 +61,13 @@ class Classifier(models.Model):
         corp.save()
 
     def train(self, classifier_model):
-        stop_words = [sw.word for sw in Stopwords.objects.all()]
+        stop_words = self.stopwords_set.all()
+        stop_words_list = [sw.word for sw in stop_words]
 
         pipe = Pipeline([
             ('vect', TfidfVectorizer(
                         token_pattern=r'[a-zA-Z]+|\s+|\_+|[^\w\d\s]',
-                        stop_words=stop_words
+                        stop_words=stop_words_list
                         )),
             ('clf', self.model_dict[classifier_model]),
             ])
@@ -127,7 +128,8 @@ class Corpus(models.Model):
 
 
 class Stopwords(models.Model):
+    classifier = models.ForeignKey(Classifier, on_delete=models.CASCADE)
     word = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
-        return self.Stopwords_word
+        return self.word

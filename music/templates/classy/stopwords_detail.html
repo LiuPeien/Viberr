@@ -27,10 +27,10 @@
         <div class="col-sm-8 col-md-9">
 
             <ul class="nav nav-pills" style="margin-bottom: 10px;">
-                <li role="presentation" class="active"><a href="{% url 'classy:detail' classifier.id %}">View All Corpus</a></li>
+                <li role="presentation"><a href="{% url 'classy:detail' classifier.id %}">View All Corpus</a></li>
                 <li role="presentation"><a href="{% url 'classy:create_corpus' classifier.id %}">Add New Corpus</a></li>
                 <li role="presentation"><a href="{% url 'classy:upload_file' classifier.id %}">Upload Corpus</a></li>
-                <li role="presentation"><a href="{% url 'classy:stop_words_detail' classifier.id %}">View All Stopwords</a></li>
+                <li role="presentation" class="active"><a href="{% url 'classy:stop_words_detail' classifier.id %}">View All Stopwords</a></li>
                 <li role="presentation"><a href="{% url 'classy:add_stop_words' classifier.id %}">Add New Stopwords</a></li>
                 <li role="presentation"><a href="{% url 'classy:upload_stop_words' classifier.id %}">Upload Stopwords</a></li>
                 <li role="presentation"><a href="{% url 'classy:trainer' classifier.id %}">Train Classifier</a></li>
@@ -40,8 +40,7 @@
             <div class="panel panel-default">
                 <div class="panel-body">
 
-                    <h3>All Corpus</h3>
-
+                    <h3>All StopWords</h3>
                     {% if error_message %}
                         <p><strong>{{ error_message }}</strong></p>
                     {% endif %}
@@ -49,26 +48,20 @@
                     <table class="table">
                         <thead>
                         <tr>
-                            <th>Title</th>
-                            <th>Text</th>
-                            <th>Labels</th>
-                            <th>Favorite</th>
+                            <th>Stop Word Id</th>
+                            <th>Stop Word</th>
                             <th>Actions</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {% for corpus in classifier.corpus_set.all %}
+                        {% for stop_words in classifier.stopwords_set.all %}
                             <tr>
-                                <td>{{ corpus.corpus_title }}</td>
-                                <td>{{ corpus.corpus_text }}</td>
-                                <td>{{ corpus.corpus_label }}</td>
+                                <td>{{ stop_words.id }}</td>
+                                <td>{{ stop_words.word }}</td>
                                 <td>
-                                    <a href="{% url 'classy:favorite' corpus.id %}" class="btn-favorite"><span class="glyphicon glyphicon-star {% if corpus.is_favorite %}active{% endif %}"></span></a>
-                                </td>
-                                <td>
-                                    <form action="{% url 'classy:delete_corpus' classifier.id corpus.id 'detail' %}" method="post" style="display: inline;">
+                                    <form action="{% url 'classy:delete_stop_words' classifier.id stop_words.id 'detail' %}" method="post" style="display: inline;">
                                         {% csrf_token %}
-                                        <input type="hidden" name="corpus_id" value="{{ corpus.id }}" />
+                                        <input type="hidden" name="stop_words_id" value="{{ stop_words.id }}" />
                                         <button type="submit" class="btn btn-danger btn-xs">
                                             <span class="glyphicon glyphicon-remove"></span>&nbsp; Delete
                                         </button>

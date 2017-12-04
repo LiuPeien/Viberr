@@ -27,9 +27,12 @@
         <div class="col-sm-8 col-md-9">
 
             <ul class="nav nav-pills" style="margin-bottom: 10px;">
-                <li role="presentation"><a href="{% url 'classy:detail' classifier.id %}">View All</a></li>
+                <li role="presentation"><a href="{% url 'classy:detail' classifier.id %}">View All Corpus</a></li>
                 <li role="presentation" class="active"><a href="{% url 'classy:create_corpus' classifier.id %}">Add New Corpus</a></li>
-                <li role="presentation"><a href="{% url 'classy:upload_file' classifier.id %}">Upload File</a></li>
+                <li role="presentation"><a href="{% url 'classy:upload_file' classifier.id %}">Upload Corpus</a></li>
+                <li role="presentation"><a href="{% url 'classy:stop_words_detail' classifier.id %}">View All Stopwords</a></li>
+                <li role="presentation"><a href="{% url 'classy:add_stop_words' classifier.id %}">Add New Stopwords</a></li>
+                <li role="presentation"><a href="{% url 'classy:upload_stop_words' classifier.id %}">Upload Stopwords</a></li>
                 <li role="presentation"><a href="{% url 'classy:trainer' classifier.id %}">Train Classifier</a></li>
                 <li role="presentation"><a href="{% url 'classy:classifier' classifier.id %}">Make Prediction</a></li>
             </ul>

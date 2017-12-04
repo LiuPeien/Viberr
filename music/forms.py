@@ -30,7 +30,7 @@ class ClassifierForm(forms.ModelForm):
 
     class Meta:
         model = Classifier
-        fields = ['user', 'classifier_name', 'classifier_logo']
+        fields = ['classifier_name', 'classifier_logo']
 
 
 class CorpusForm(forms.ModelForm):
@@ -55,12 +55,7 @@ class PredictionForm(forms.ModelForm):
 
 
 class UploadFileForm(forms.Form):
-    classifier_name = forms.CharField(max_length=50)
-    file = forms.FileField()
-
-
-class UploadStopWordsFileForm(forms.Form):
-    file = forms.FileField()
+    file_csv = forms.FileField()
 
 
 class ModelChoiceForm(forms.Form):

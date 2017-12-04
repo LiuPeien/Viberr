@@ -9,8 +9,6 @@
         <div class="col-sm-12">
             <ul class="nav nav-pills" style="margin-bottom: 10px;">
                 <li role="presentation" class="active"><a href="{% url 'classy:stop_words' %}">View All</a></li>
-                <li role="presentation" ><a href="{% url 'classy:add_stop_words' %}">Add Stop Word</a></li>
-                <li role="presentation" ><a href="{% url 'classy:upload_stop_words' %}">Upload File</a></li>
             </ul>
         </div>
     </div>
@@ -26,6 +24,7 @@
                             <tr>
                                 <th>Stop Word Id</th>
                                 <th>Stop Word</th>
+                                <th>Classifier</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -34,8 +33,14 @@
                                 <tr>
                                     <td>{{ stop_words.id }}</td>
                                     <td>{{ stop_words.word }}</td>
+                                     <td>
+                                        <a href="{% url 'classy:stop_words_detail' stop_words.classifier.id %}">
+                                            <img src="{{ stop_words.classifier.classifier_logo.url }}" class="img-responsive" style="width: 20px; float: left; margin-right: 10px;" />
+                                        </a>
+                                        <a href="{% url 'classy:detail' stop_words.classifier.id %}">{{ stop_words.classifier.classifier_name }}</a>
+                                    </td>
                                     <td>
-                                        <form action="{% url 'classy:delete_stop_words' stop_words.id %}" method="post" style="display: inline;">
+                                        <form action="{% url 'classy:delete_stop_words' stop_words.classifier.id stop_words.id 'all' %}" method="post" style="display: inline;">
                                             {% csrf_token %}
                                             <input type="hidden" name="stop_words_id" value="{{ stop_words.id }}" />
                                             <button type="submit" class="btn btn-danger btn-xs">
